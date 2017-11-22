@@ -9,3 +9,9 @@
   become: true
   roles:
     - role: kafka
+
+- hosts: prom
+  become: true
+  roles:
+    - role: prometheus-server
+      tags: prometheus-server

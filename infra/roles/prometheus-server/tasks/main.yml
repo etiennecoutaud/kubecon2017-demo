@@ -1,0 +1,60 @@
+---
+- name: Create etc/prometheus directory
+  file:
+    path: /etc/prometheus
+    state: directory
+
+- name: download and untar prometheus tarball
+  unarchive:
+    src: https://github.com/prometheus/prometheus/releases/download/v2.0.0/prometheus-2.0.0.linux-amd64.tar.gz
+    dest: "/opt"
+    remote_src: yes
+
+- name: copy systemd config to server
+  copy:
+    src: prometheus.service
+    dest: /etc/systemd/system/prometheus.service
+  notify:
+    - reload systemd
+    - restart prometheus
+
+# - name: Copy rules files
+#   template:
+#     src: "{{ item }}.rules"
+#     dest: "/etc/prometheus/{{ item }}"
+#   with_items:
+#     - up
+#   notify:
+#     - restart prometheus
+
+- name: copy prometheus main config file from role's default, if necessary
+  copy:
+    src: prometheus.yml
+    dest: "/etc/prometheus/prometheus.yml"
+  notify:
+    - restart prometheus
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- name: Ensure prometheus server is started and enabled at startup
+  service:
+    name: prometheus
+    state: started
+    enabled: yes
+
+- name: Wait for prometheus to be up
+  wait_for:
+    port: "9090"
+    timeout: 10
+
+- name: Check that you can connect to the prometheus targets page
+  uri:
+    url: "http://127.0.0.1:9090/targets"
+    return_content: yes
+  register: prometheus_targets_page_result
+  always_run: true
+
+- name: Ensure that jmx-exporter metrics is served by http
+  assert:
+    that: "'up' in prometheus_targets_page_result.content "
