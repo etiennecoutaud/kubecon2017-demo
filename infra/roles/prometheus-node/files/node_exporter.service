@@ -1,0 +1,12 @@
+[Unit]
+Description=node-exporter - Exporter for machine metrics.
+
+[Service]
+Type=simple
+Restart=always
+StartLimitBurst=100
+
+ExecStart=/opt/node_exporter-0.15.1.linux-amd64/node_exporter --collector.systemd
+
+[Install]
+WantedBy=multi-user.target

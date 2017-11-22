@@ -1,4 +1,10 @@
 ---
+- hosts: all
+  become: true
+  roles:
+    - role: prometheus-node
+      tags: prometheus-node
+
 - hosts: kafka
   become: true
   roles:
