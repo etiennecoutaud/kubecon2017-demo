@@ -1,0 +1,13 @@
+[Unit]
+Description=kafka
+
+[Service]
+Type=simple
+Restart=always
+StartLimitBurst=100
+EnvironmentFile=/etc/sysconfig/kafka
+
+ExecStart=/opt/kafka_2.10-0.10.2.1/bin/kafka-server-start.sh /opt/kafka_2.10-0.10.2.1/config/server.properties
+
+[Install]
+WantedBy=multi-user.target
