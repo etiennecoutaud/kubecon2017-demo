@@ -8,7 +8,7 @@ To use this code you need to have :
 - VirtualBox >= 5.1.30
 - Ansible >= 2.4
 
-Setup infractructure
+Setup infrastructure
 ====================
 Vagrant will bootrsap an architecture with 3 vms:
 - App vm
