@@ -23,8 +23,16 @@ scrape_configs:
           - 192.168.201.10:9100
           - 192.168.201.11:9100
           - 192.168.201.12:9100
+          - 192.168.201.13:9100
 
   - job_name: 'kafka'
     static_configs:
       - targets:
           - 192.168.201.12:7071
+
+alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets:
+      - "192.168.201.13:9093"

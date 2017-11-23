@@ -1,0 +1,8 @@
+---
+- name: reload systemd
+  command: systemctl daemon-reload
+
+- name: restart prometheus_alertmanager
+  service:
+    name: prometheus-alertmanager
+    state: restarted

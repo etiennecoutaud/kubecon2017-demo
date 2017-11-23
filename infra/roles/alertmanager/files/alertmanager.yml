@@ -1,0 +1,19 @@
+global:
+# The root route on which each incoming alert enters.
+route:
+  repeat_interval: 15m
+  receiver: core-ops-slack
+  routes:
+
+  - match:
+      severity: critical
+    receiver: core-ops-slack
+    continue: true
+
+receivers:
+- name: core-ops-slack
+  slack_configs:
+  - send_resolved: true
+    api_url: monwebook
+    channel: plop
+    text: "<!channel>\n*Environment:* [{{ environment_name }}]\n*Summary:*\n{{ range .Alerts }}• {{ .Annotations.summary }}{{ end }}\n*Description:*\n{{ range .Alerts }}• {{ .Annotations.description }}"

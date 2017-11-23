@@ -18,4 +18,10 @@ Vagrant.configure(2 ) do |config|
     kafka.vm.network "private_network", ip: "192.168.201.12"
   end
 
+  config.vm.define :grafana, autostart: true do |grafana|
+    grafana.vm.box = "centos/7"
+    grafana.vm.hostname = "grafana"
+    grafana.vm.network "private_network", ip: "192.168.201.13"
+  end
+
 end

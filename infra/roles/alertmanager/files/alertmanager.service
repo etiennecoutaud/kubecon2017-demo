@@ -1,0 +1,14 @@
+[Unit]
+Description=prometheus-alertmanager
+Documentation=https://github.com/William-Yeh/ansible-prometheus
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+StartLimitBurst=100
+
+ExecStart=/opt/alertmanager-0.11.0.linux-amd64/alertmanager --config.file=/etc/alertmanager/alertmanager.yml
+
+[Install]
+WantedBy=multi-user.target

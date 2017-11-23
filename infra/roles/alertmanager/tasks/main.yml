@@ -1,0 +1,50 @@
+---
+
+- name: create alertmanager config directory
+  file:
+    path: /etc/alertmanager
+    state: directory
+
+- name: download and uncompress alertmanager tarball
+  unarchive:
+    src: "https://github.com/prometheus/alertmanager/releases/download/v0.11.0/alertmanager-0.11.0.linux-amd64.tar.gz"
+    dest: /opt
+    remote_src: yes
+
+- name: copy systemd config to server
+  copy:
+    src: alertmanager.service
+    dest: /etc/systemd/system/prometheus-alertmanager.service
+  notify:
+    - reload systemd
+    - restart prometheus_alertmanager
+
+- name: install default alertmanager config file
+  copy:
+    src: alertmanager.yml
+    dest: /etc/alertmanager/alertmanager.yml
+  notify:
+  - restart prometheus_alertmanager
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- name: Ensure prometheus_alertmanager is enabled and started
+  service:
+    name: prometheus-alertmanager
+    enabled: yes
+    state: started
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- name: Wait for alertmanager to be up
+  wait_for:
+    port: 9093
+    timeout: 10
+
+- name: Check that you can connect to the alertmanager
+  uri:
+    url: "http://127.0.0.1:9093"
+    return_content: yes
+  register: prometheus_alertmanager_landpage

@@ -15,3 +15,9 @@
   roles:
     - role: prometheus-server
       tags: prometheus-server
+
+- hosts: grafana
+  become: true
+  roles:
+    - role: alertmanager
+      tags: alertmanager
