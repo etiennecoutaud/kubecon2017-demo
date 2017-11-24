@@ -1,0 +1,44 @@
+---
+- name: Install Grafana package
+  yum:
+    name: "https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-4.6.2-1.x86_64.rpm"
+    state: present
+
+# - name: Configure Grafana
+#   template:
+#     src: grafana.ini.j2
+#     dest: /etc/grafana/grafana.ini
+#   notify:
+#     - restart grafana
+
+# - name: Deploy grafana server sysconfig
+#   template:
+#     src: grafana-server-sysconfig.j2
+#     dest: /etc/sysconfig/grafana-server
+#   notify:
+#     - restart grafana
+
+- name: Flush handlers
+  meta: flush_handlers
+
+- name: Make sure grafana service is enabled and running
+  service:
+    name: grafana-server
+    enabled: yes
+    state: running
+
+- name: Wait for grafana to be up
+  wait_for:
+    port: "3000"
+    delay: 10
+
+- name: Check that you can connect to the grafana login page
+  uri:
+    url: "http://127.0.01:3000"
+    return_content: yes
+  register: grafana_login_page_result
+  always_run: true
+
+- name: Ensure that grafana is served by http
+  assert:
+    that: "'<title>Grafana</title>' in grafana_login_page_result.content "
