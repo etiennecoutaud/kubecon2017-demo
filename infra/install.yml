@@ -4,6 +4,8 @@
   roles:
     - role: prometheus-node
       tags: prometheus-node
+    - role: ntp
+      tags: ntp
 
 - hosts: kafka
   become: true
@@ -21,3 +23,5 @@
   roles:
     - role: alertmanager
       tags: alertmanager
+    - role: grafana
+      tags: grafana

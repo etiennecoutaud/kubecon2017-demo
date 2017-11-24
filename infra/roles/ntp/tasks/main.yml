@@ -1,0 +1,17 @@
+---
+- name: install ntpd
+  package:
+    name: ntp
+    state: installed
+
+- name: ensure ntpd is running and enabled
+  service:
+    name: ntpd
+    state: started
+    enabled: yes
+
+- name: Configure timedate to use ntp
+  shell: timedatectl set-ntp true
+
+- name: Configure to use timezone
+  shell: timedatectl set-timezone {{ timezone }}
