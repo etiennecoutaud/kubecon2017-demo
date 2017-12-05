@@ -4,13 +4,20 @@
   roles:
     - role: prometheus-node
       tags: prometheus-node
-    - role: ntp
-      tags: ntp
+
+- hosts: app
+  become: true
+  roles:
+    - role: app
+      tags: app
+    - role: jenkins
+      tags: jenkins
 
 - hosts: kafka
   become: true
   roles:
     - role: kafka
+      tags: kafka
 
 - hosts: prom
   become: true

@@ -1,0 +1,31 @@
+---
+- name: Add jenkins user
+  lineinfile:
+    insertafter: EOF
+    line: 'jenkins    ALL = NOPASSWD: /home/vagrant/app.sh'
+    path: /etc/sudoers
+
+- name: Install java
+  yum:
+    name: java
+    state: present
+  with_items:
+  - java
+  - wget
+
+- name: Add jenkins repository
+  shell: "wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo"
+
+- name: Import key
+  shell: "rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key"
+
+- name: Install package
+  yum:
+    name: jenkins
+    state: present
+
+- name: Ensure jenkins is running and enabled
+  service:
+    name: jenkins
+    state: running
+    enabled: yes

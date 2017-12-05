@@ -1,0 +1,32 @@
+---
+- name: copy python app to target server
+  copy:
+    src: app.py
+    dest: /home/vagrant/app.py
+
+- name: Install pip
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - epel-release
+  - python-pip
+
+- name: Install dependencies
+  pip:
+    name: "{{ item }}"
+  with_items:
+  - prometheus_client
+  - kafka
+
+- lineinfile:
+    path: /etc/hosts
+    line: '192.168.201.12 kafka'
+    insertafter: EOF
+
+- name: copy systemd config to server
+  copy:
+    src: app.service
+    dest: /etc/systemd/system/app.service
+  notify:
+    - reload systemd

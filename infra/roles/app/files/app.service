@@ -1,0 +1,10 @@
+[Unit]
+Description=app
+
+[Service]
+Type=simple
+
+ExecStart=/usr/bin/python /home/vagrant/app.py
+
+[Install]
+WantedBy=multi-user.target

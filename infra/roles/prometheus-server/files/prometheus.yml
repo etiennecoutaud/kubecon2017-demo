@@ -1,6 +1,6 @@
 global:
-  scrape_interval:     "15s" # By default, scrape targets every 15 seconds.
-  evaluation_interval: "15s" # By default, scrape targets every 15 seconds.
+  scrape_interval:     "5s" # By default, scrape targets every 15 seconds.
+  evaluation_interval: "5s" # By default, scrape targets every 15 seconds.
   # scrape_timeout is set to the global default (5s).
 
   # The labels to add to any time series or alerts when communicating with
@@ -8,6 +8,8 @@ global:
   external_labels:
     monitor: 'master'
 
+rule_files:
+  - /etc/prometheus/restart.rules
 # Rule files specifies a list of files from which rules are read.
 # rule_files:
 #   {% for file in prometheus_alerting_rules %}
@@ -29,6 +31,11 @@ scrape_configs:
     static_configs:
       - targets:
           - 192.168.201.12:7071
+
+  - job_name: 'app'
+    static_configs:
+      - targets:
+          - 192.168.201.10:8000
 
 alerting:
   alertmanagers:

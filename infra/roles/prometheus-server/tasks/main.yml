@@ -29,10 +29,13 @@
 
 - name: copy prometheus main config file from role's default, if necessary
   copy:
-    src: prometheus.yml
-    dest: "/etc/prometheus/prometheus.yml"
+    src: "{{ item }}"
+    dest: "/etc/prometheus/{{ item }}"
   notify:
     - restart prometheus
+  with_items:
+  - prometheus.yml
+  - restart.rules
 
 - name: Flush handlers
   meta: flush_handlers
